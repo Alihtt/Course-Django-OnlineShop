@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
-    'home.apps.HomeConfig'
+    'home.apps.HomeConfig',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+# ArvanCloud storage
+DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+AWS_ACCESS_KEY_ID = 'ce789507-8073-4f7b-b239-522e50b136d0'
+AWS_SECRET_ACCESS_KEY = '38db0b7fdc3fba6257d221e2c092617cfed8f0317d91293b0238a0efc47fe74d'
+AWS_S3_ENDPOINT_URL = 'https://s3.ir-thr-at1.arvanstorage.ir'
+AWS_STORAGE_BUCKET_NAME = 'alihtt-djangoshop'
+AWS_S3_FILE_OVERWRITE = False
+AWS_SERVICE_NAME = 's3'
