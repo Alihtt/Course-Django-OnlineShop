@@ -7,4 +7,10 @@
 <img src="{{ product.image.url }}" alt="" style="width: 18rem;">
 <hr>
 <p>{{ product.description }}</p>
+<br>
+<form action="{% url 'orders:cart_add' product.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Add to cart">
+</form>
 {% endblock %}
