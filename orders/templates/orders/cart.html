@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table class="table">
+<table class="table table-dark">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -9,6 +9,7 @@
             <th scope="col">Quantity</th>
             <th scope="col">Unit Price</th>
             <th scope="col">Total Price</th>
+            <th scope="col">Remove</th>
         </tr>
     </thead>
     <tbody>
@@ -19,8 +20,17 @@
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.total_price }}</td>
+            <td><a href="{% url 'orders:cart_remove' item.product.id %}">Remove</a></td>
         </tr>
         {% endfor %}
+        <tr class="table-group-divider">
+            <th scope="row"><b>Total</b></th>
+            <td></td>
+            <td><b>{{ cart.get_total_quantity }}</b></td>
+            <td></td>
+            <td><b>{{ cart.get_total_price }}</b></td>
+            <td></td>
+        </tr>
     </tbody>
 </table>
 {% endblock %}
