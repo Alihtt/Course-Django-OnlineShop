@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrderItem, Order
+from .models import OrderItem, Order, Coupon
 
 # Register your models here.
 
@@ -7,6 +7,9 @@ from .models import OrderItem, Order
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ('product',)
+
+
+admin.site.register(Coupon)
 
 
 @admin.register(Order)

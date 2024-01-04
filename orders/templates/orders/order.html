@@ -2,6 +2,17 @@
 
 {% block content %}
 <h3>Checkout</h3>
+{% if order.discount %}
+<p>Total: <s>{{ order.get_total_price_without_discount }}</s> {{ order.get_total_price }} </p>
+<p>Discount: {{ order.discount }}%</p>
+{% else %}
 <p>Total: {{ order.get_total_price }}</p>
+{% endif %}
+<form action="{% url 'orders:apply_coupon' order.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Apply">
+</form>
+<br>
 <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-primary">Pay</a>
 {% endblock %}

@@ -1,15 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from .forms import CartAddForm
+from .forms import CartAddForm, CouponApplyForm
 from .cart import Cart
 from home.models import Product
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Coupon
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 import requests
 import json
 from django.http import HttpResponse
-
+from datetime import datetime
+from django.contrib import messages
 # Create your views here.
 
 
@@ -50,8 +51,9 @@ class OrderCreateView(LoginRequiredMixin, View):
 
 class OrderDetailView(LoginRequiredMixin, View):
     def get(self, request, order_id):
+        form = CouponApplyForm()
         order = get_object_or_404(Order, id=order_id)
-        return render(request, 'orders/order.html', {'order': order})
+        return render(request, 'orders/order.html', {'order': order, 'form': form})
 
 
 ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
@@ -125,3 +127,25 @@ class OrderVerifyView(LoginRequiredMixin, View):
                 return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
         else:
             return HttpResponse('Transaction failed or canceled by user')
+
+
+class CouponApplyView(View):
+    form_class = CouponApplyForm
+
+    def post(self, request, order_id):
+        now = datetime.now()
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            try:
+                coupon = Coupon.objects.get(
+                    code__exact=code, start_at__lte=now, end_at__gte=now, active=True)
+            except Coupon.DoesNotExist:
+                messages.error(request, 'Coupon Does not exists!', 'danger')
+                return redirect('orders:order_detail', order_id)
+            order = Order.objects.get(id=order_id)
+            order.discount = coupon.discount
+            order.save()
+            messages.success(
+                request, 'Your Coupon successfully applied!', 'success')
+        return redirect('orders:order_detail', order_id)
