@@ -45,7 +45,8 @@ INSTALLED_APPS = [
 
     # Third party apps
     'storages',
-    'django_celery_beat'
+    'django_celery_beat',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,11 @@ AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
 
 # ZarinPal
 MERCHANT = "00000000-0000-0000-0000-000000000000"
+
+
+# Ckeditor
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+}
